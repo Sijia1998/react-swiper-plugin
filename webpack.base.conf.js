@@ -42,20 +42,30 @@ module.exports = {
       {
         test: /\.less$/,
         // 因为这个插件需要干涉模块转换的内容，所以需要使用它对应的 loader
-        use: ['style-loader', 'css-loader', 'less-loader']
-      },
-      {
-        test: /\.(png|jpg|gif|svg)$/,
         use: [
+          'style-loader',
           {
-            loader: 'url-loader',
+            loader: 'css-loader',
             options: {
-              limit: 8192, // 如果文件小于limit限制，则可以返回DataURL。
-              fallback: 'responsive-loader' // 当目标文件的大小超过limit选项中设置的限制时要使用的备用加载程序。
+              modules: true
+            }
+          },
+          {
+            loader: 'less-loader',
+            options: {
+              javascriptEnabled: true
             }
           }
         ]
       },
+      {
+        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        loader: 'url-loader',
+        query: {
+          limit: 10000
+        }
+      },
+
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
         use: ['file-loader']
